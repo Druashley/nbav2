@@ -8,10 +8,8 @@ export default function PlayerSelector() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const { deleteSearch, setSearchResults } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const { deleteSearch, setSearchResults, clearSearchResults } =
+    bindActionCreators(actionCreators, dispatch);
 
   const handlePageChange = async (page) => {
     console.log(page);
@@ -19,12 +17,15 @@ export default function PlayerSelector() {
     await axiosInstance
       .get(`players?search=${state.search}&page=${page}&per_page=10`)
       .then((res) => {
-        console.log(res.data);
         setSearchResults(res.data);
       });
   };
 
-  console.log(state.searchResult);
+  const handleClear = () => {
+    clearSearchResults();
+    deleteSearch();
+  };
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-wrap justify-center overflow-y-auto  md:h-auto ">
@@ -34,7 +35,7 @@ export default function PlayerSelector() {
             return (
               <div
                 key={player.id}
-                className="border rounded p-2 m-2 cursor-pointer "
+                className="border rounded p-2 m-2 cursor-pointer  hover:bg-deepcyan"
               >
                 <div>
                   {player.first_name} {player.last_name}
@@ -46,10 +47,11 @@ export default function PlayerSelector() {
 
       {state.searchResult &&
         state.searchResult.meta &&
-        state.searchResult.data.length > 0 && (
+        state.searchResult.data.length > 0 &&
+        state.searchResult.meta.total_pages !== 1 && (
           <div className="flex justify-center items-center pt-4">
             <div
-              className="border p-2 rounded cursor-pointer"
+              className="border p-2 rounded cursor-pointer hover:bg-deepcyan"
               onClick={() => {
                 handlePageChange(1);
               }}
@@ -61,7 +63,7 @@ export default function PlayerSelector() {
                 {state.searchResult.meta.current_page !== 1 &&
                   state.searchResult.meta.current_page !== 2 && (
                     <div
-                      className="border p-2 rounded cursor-pointer"
+                      className="border p-2 rounded cursor-pointer hover:bg-deepcyan"
                       onClick={() => {
                         handlePageChange(state.searchResult.meta.next_page - 2);
                       }}
@@ -77,7 +79,7 @@ export default function PlayerSelector() {
                 )}
 
                 <div
-                  className="border p-2 rounded cursor-pointer"
+                  className="border p-2 rounded cursor-pointer hover:bg-deepcyan"
                   onClick={() => {
                     handlePageChange(state.searchResult.meta.next_page);
                   }}
@@ -89,25 +91,32 @@ export default function PlayerSelector() {
             {!state.searchResult.meta.next_page && (
               <div className="flex">
                 <div
-                  className="border p-2 rounded cursor-pointer"
+                  className="border p-2 rounded cursor-pointer hover:bg-deepcyan"
                   onClick={() => {
                     handlePageChange(state.searchResult.meta.current_page - 1);
                   }}
                 >
                   {state.searchResult.meta.current_page - 1}
                 </div>
-                <div
-                  className="border p-2 rounded cursor-pointer underline font-extrabold"
-                  onClick={() => {
-                    handlePageChange(state.searchResult.meta.next_page);
-                  }}
-                >
+                <div className="border p-2 rounded cursor-pointer underline font-extrabold ">
                   {state.searchResult.meta.current_page}
                 </div>
               </div>
             )}
           </div>
         )}
+      {state.searchResult.data && state.searchResult.data.length > 0 && (
+        <div className="flex justify-end  px-12 md:px-24">
+          <div
+            className="uppercase border p-4 rounded bg-darkest"
+            onClick={() => {
+              handleClear();
+            }}
+          >
+            Clear
+          </div>
+        </div>
+      )}
     </div>
   );
 }

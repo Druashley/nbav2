@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { axiosInstance } from "../../axiosInstance";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -12,10 +12,8 @@ export default function SearchBar() {
   // returns all methods, so we destructure instead.
   // const AC = bindActionCreators(actionCreators, dispatch);
 
-  const { changeSearch, deleteSearch, setSearchResults } = bindActionCreators(
-    actionCreators,
-    dispatch
-  );
+  const { changeSearch, deleteSearch, setSearchResults, clearSearchResults } =
+    bindActionCreators(actionCreators, dispatch);
 
   // allows you to set state to just the data you need
   // const state = useSelector((state) => state.search);
@@ -28,6 +26,20 @@ export default function SearchBar() {
       });
   };
 
+  const handleInput = (e) => {
+    // if statement will remove previous results if a user types into the search bar.
+    if (state.searchResult.data) {
+      clearSearchResults();
+    }
+
+    changeSearch(e.target.value);
+  };
+
+  const handleClear = () => {
+    clearSearchResults();
+    deleteSearch();
+  };
+
   return (
     <div className="flex justify-start ">
       <input
@@ -36,7 +48,7 @@ export default function SearchBar() {
         className="p-4 rounded"
         value={state.search}
         onChange={(e) => {
-          changeSearch(e.target.value);
+          handleInput(e);
         }}
       />
       <button
@@ -47,6 +59,16 @@ export default function SearchBar() {
       >
         Search
       </button>
+      {state.search.length > 0 && (
+        <button
+          className="bg-red-600 text-dark p-2 sm:p-4 rounded uppercase"
+          onClick={() => {
+            handleClear();
+          }}
+        >
+          X
+        </button>
+      )}
     </div>
   );
 }

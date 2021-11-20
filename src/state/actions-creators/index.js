@@ -24,3 +24,12 @@ export const setSearchResults = (arrayOfPlayers) => {
     });
   };
 };
+
+export const clearSearchResults = () => {
+  return (dispatch) => {
+    dispatch({
+      type: "DELETE_RESULTS",
+      payload: [],
+    });
+  };
+};
