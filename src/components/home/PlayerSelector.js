@@ -45,8 +45,8 @@ export default function PlayerSelector() {
       </div>
 
       {state.searchResult &&
-        state.searchResult.data.length > 0 &&
-        state.searchResult.meta && (
+        state.searchResult.meta &&
+        state.searchResult.data.length > 0 && (
           <div className="flex justify-center items-center pt-4">
             <div
               className="border p-2 rounded cursor-pointer"
