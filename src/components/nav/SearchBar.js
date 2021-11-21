@@ -59,7 +59,7 @@ export default function SearchBar() {
       >
         Search
       </button>
-      {state.search.length > 0 && (
+      {state.search.length > 0 ? (
         <button
           className="bg-red-600 text-dark p-2 sm:p-4 rounded uppercase"
           onClick={() => {
@@ -67,6 +67,10 @@ export default function SearchBar() {
           }}
         >
           X
+        </button>
+      ) : (
+        <button className="transparent text-transparent p-2 sm:p-4 rounded uppercase cursor-default">
+          x
         </button>
       )}
     </div>
