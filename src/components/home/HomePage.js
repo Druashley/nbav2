@@ -1,5 +1,7 @@
 import React from "react";
-import PlayerSelector from "./PlayerSelector";
+import PlayerSelector from "../player/PlayerSelector";
+import PlayerList from "../player/PlayerList";
+import PlayerTable from "../player/PlayerTable";
 import blob from "../../images/nba.svg";
 
 export default function HomePage() {
@@ -10,8 +12,9 @@ export default function HomePage() {
     >
       <div className="container mx-auto pt-12 text-cream">
         <PlayerSelector />
-        <div>player List</div>
-        <div>Stats showcase</div>
+        <PlayerList />
+        <PlayerTable />
+        {/* <div>Stats showcase</div> */}
       </div>
     </section>
   );

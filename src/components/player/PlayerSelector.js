@@ -1,4 +1,5 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 import { axiosInstance } from "../../axiosInstance";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -9,15 +10,18 @@ export default function PlayerSelector() {
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const { deleteSearch, setSearchResults, clearSearchResults } =
-    bindActionCreators(actionCreators, dispatch);
+  const {
+    deleteSearch,
+    setSearchResults,
+    clearSearchResults,
+    addToPlayerList,
+  } = bindActionCreators(actionCreators, dispatch);
 
   const handlePageChange = async (page) => {
     window.scrollTo(0, 0);
     await axiosInstance
       .get(`players?search=${state.search}&page=${page}&per_page=10`)
       .then((res) => {
-        console.log(res.data);
         setSearchResults(res.data);
       });
   };
@@ -27,8 +31,22 @@ export default function PlayerSelector() {
     deleteSearch();
   };
 
+  const handlePlayer = async (player) => {
+    player.uuid = uuidv4();
+    // Will have to change empty array to actual data.
+    player.stats = [];
+    addToPlayerList(player);
+  };
+
   return (
     <div className="flex flex-col">
+      {/* <button
+        onClick={() => {
+          console.log(state);
+        }}
+      >
+        See State
+      </button> */}
       <div className="flex flex-wrap justify-center overflow-y-auto  md:h-auto  ">
         {state.searchResult &&
           state.searchResult.data &&
@@ -36,14 +54,19 @@ export default function PlayerSelector() {
             return (
               <div
                 key={player.id}
-                className="border rounded p-2 m-2 cursor-pointer hover:border-darkest text-lg"
+                className="border rounded p-2 m-2 cursor-pointer hover:border-darkest text-lg "
                 style={{
                   background: `linear-gradient(135deg, ${
                     teamInfo(player.team.abbreviation).colors.colorOne
-                  }, ${teamInfo(player.team.abbreviation).colors.colorTwo})`,
+                  } 50%, ${
+                    teamInfo(player.team.abbreviation).colors.colorTwo
+                  } 50%)`,
+                }}
+                onClick={() => {
+                  handlePlayer(player);
                 }}
               >
-                <div>
+                <div className="bg-darkest bg-opacity-50 rounded">
                   {player.first_name} {player.last_name}
                 </div>
               </div>
@@ -112,7 +135,7 @@ export default function PlayerSelector() {
           </div>
         )}
       {state.searchResult.data && state.searchResult.data.length > 0 && (
-        <div className="flex justify-center pt-4 px-12 md:px-24">
+        <div className="flex justify-center py-4 px-12 md:px-24">
           <div
             className="uppercase border p-4 rounded bg-darkest cursor-pointer hover:border-deepcyan hover:bg-cream hover:text-dark"
             onClick={() => {
