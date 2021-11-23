@@ -11,24 +11,6 @@ export const axiosInstance = axios.create({
   },
 });
 
-export const getPlayerSeasonalAverages = async (id, season) => {
-  if (!season) {
-    await axiosInstance
-      .get(`/season_averages?player_ids[]=${id}`)
-      .then((res) => {
-        console.log(res.data);
-        return res.data;
-      });
-  }
-  if (season) {
-    await axiosInstance
-      .get(`/season_averages?season=[]${season}&player_ids[]=${id}`)
-      .then((res) => {
-        return res.data;
-      });
-  }
-};
-
 // Examples
 
 // Gets the stats for each game for a Player

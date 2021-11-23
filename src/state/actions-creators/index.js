@@ -61,3 +61,12 @@ export const removePlayerFromList = (uuid) => {
     });
   };
 };
+
+export const updatePlayerStatsBySeason = (player) => {
+  return (dispatch) => {
+    dispatch({
+      type: "UPDATE_STATS",
+      payload: player,
+    });
+  };
+};

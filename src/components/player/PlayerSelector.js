@@ -18,6 +18,7 @@ export default function PlayerSelector() {
   } = bindActionCreators(actionCreators, dispatch);
 
   const handlePageChange = async (page) => {
+    // Axios request that gets data based on the page of results.
     window.scrollTo(0, 0);
     await axiosInstance
       .get(`players?search=${state.search}&page=${page}&per_page=10`)
@@ -27,15 +28,29 @@ export default function PlayerSelector() {
   };
 
   const handleClear = () => {
+    //Clears the search results and then clears the search bar.
     clearSearchResults();
     deleteSearch();
   };
 
-  const handlePlayer = async (player) => {
-    player.uuid = uuidv4();
-    // Will have to change empty array to actual data.
-    player.stats = [];
-    addToPlayerList(player);
+  const getPlayerSeasonalAverages = async (player, season) => {
+    if (!season) {
+      await axiosInstance
+        .get(`/season_averages?player_ids[]=${player.id}`)
+        .then((res) => {
+          player.uuid = uuidv4();
+          player.stats = res.data;
+          player.season = 2021;
+          addToPlayerList(player);
+        });
+    }
+    if (season) {
+      await axiosInstance
+        .get(`/season_averages?season=[]${season}&player_ids[]=${player.id}`)
+        .then((res) => {
+          return res.data;
+        });
+    }
   };
 
   return (
@@ -63,7 +78,7 @@ export default function PlayerSelector() {
                   } 50%)`,
                 }}
                 onClick={() => {
-                  handlePlayer(player);
+                  getPlayerSeasonalAverages(player);
                 }}
               >
                 <div className="bg-darkest bg-opacity-50 rounded">
