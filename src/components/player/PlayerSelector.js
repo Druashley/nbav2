@@ -34,12 +34,46 @@ export default function PlayerSelector() {
   };
 
   const getPlayerSeasonalAverages = async (player, season) => {
+    let emptyStats = {
+      data: [
+        {
+          games_played: 0,
+          min: 0,
+          fgm: 0,
+          fga: 0,
+          fg3m: 0,
+          fg3a: 0,
+          ftm: 0,
+          fta: 0,
+          oreb: 0,
+          dreb: 0,
+          reb: 0,
+          ast: 0,
+          stl: 0,
+          blk: 0,
+          turnover: 0,
+          pf: 0,
+          pts: 0,
+          fg_pct: 0,
+          fg3_pct: 0,
+          ft_pct: 0,
+        },
+      ],
+    };
+
     if (!season) {
       await axiosInstance
         .get(`/season_averages?player_ids[]=${player.id}`)
         .then((res) => {
           player.uuid = uuidv4();
-          player.stats = res.data;
+          // if statement checks to see if the api has stats. If not we fill in with 0s.
+          // this makes data manipulation easier for later in the project.
+          if (res.data.data.length === 0) {
+            player.stats = emptyStats;
+          } else {
+            player.stats = res.data;
+          }
+
           player.season = 2021;
           addToPlayerList(player);
         });

@@ -26,13 +26,26 @@ const playerListReducer = (state = [], action) => {
         }
         return [...newState];
       });
-      // let playerIndex = state.findIndex(
-      //   (player) => player.uuid === action.payload.uuid
-      // );
-      // state[playerIndex].stats = action.payload.stats;
-      console.log("returing state");
-      console.log(newState);
       return newState;
+    case "SORT_BY_STAT":
+      let sortedPlayerList = [...state];
+      if (action.payload.ascending) {
+        sortedPlayerList.sort((a, b) => {
+          return (
+            a.stats.data[0][action.payload.stat] -
+            b.stats.data[0][action.payload.stat]
+          );
+        });
+      }
+      if (!action.payload.ascending) {
+        sortedPlayerList.sort((a, b) => {
+          return (
+            b.stats.data[0][action.payload.stat] -
+            a.stats.data[0][action.payload.stat]
+          );
+        });
+      }
+      return sortedPlayerList;
     default:
       return state;
   }

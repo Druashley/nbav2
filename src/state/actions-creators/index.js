@@ -70,3 +70,12 @@ export const updatePlayerStatsBySeason = (player) => {
     });
   };
 };
+
+export const sortPlayerListByStat = (metric) => {
+  return (dispatch) => {
+    dispatch({
+      type: "SORT_BY_STAT",
+      payload: metric,
+    });
+  };
+};

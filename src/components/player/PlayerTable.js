@@ -1,14 +1,31 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../../state";
 
 export default function PlayerTable() {
   const state = useSelector((state) => state.playerList);
-
   const playerList = [...state];
+  const dispatch = useDispatch();
+  const { sortPlayerListByStat } = bindActionCreators(actionCreators, dispatch);
+
+  const [activeStat, setActiveStat] = useState("");
+  const [columnDirection, setColumnDirection] = useState(true);
+
+  const handleStatSort = (stat, ascending) => {
+    setActiveStat(stat);
+    let metric = {
+      stat,
+      ascending,
+    };
+    sortPlayerListByStat(metric);
+    setColumnDirection(!columnDirection);
+  };
+
   return (
     <>
       {playerList.length > 0 && (
-        <div className="overflow-auto text-xs md:text-base">
+        <div className="overflow-auto text-xs md:text-base text-center">
           <table className="border-collapse w-full table-fixed break-word mt-12 overflow-auto">
             <thead>
               <tr className="h-12">
@@ -21,60 +38,208 @@ export default function PlayerTable() {
                 <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-12">
                   Min
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "games_played"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() =>
+                    handleStatSort("games_played", columnDirection)
+                  }
+                >
                   GP
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "pts"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("pts", columnDirection)}
+                >
                   PTS
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fg_pct"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fg_pct", columnDirection)}
+                >
                   FG%
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fga"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fga", columnDirection)}
+                >
                   FGA
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fgm"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fgm", columnDirection)}
+                >
                   FGM
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fg3_pct"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fg3_pct", columnDirection)}
+                >
                   3P%
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fg3a"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fg3a", columnDirection)}
+                >
                   3PA
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fg3m"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fg3m", columnDirection)}
+                >
                   3PM
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "ft_pct"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("ft_pct", columnDirection)}
+                >
                   FT%
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "fta"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("fta", columnDirection)}
+                >
+                  {" "}
                   FTA
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "ftm"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("ftm", columnDirection)}
+                >
                   FTM
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "ast"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("ast", columnDirection)}
+                >
                   AST
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "blk"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("blk", columnDirection)}
+                >
                   BLK
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "stl"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("stl", columnDirection)}
+                >
                   STL
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "pf"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("pf", columnDirection)}
+                >
                   PF
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-8">
+                <th
+                  className={
+                    activeStat === "turnover"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("turnover", columnDirection)}
+                >
                   TO
+                </th>
+                <th
+                  className={
+                    activeStat === "reb"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("reb", columnDirection)}
+                >
+                  REB
+                </th>
+                <th
+                  className={
+                    activeStat === "oreb"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("oreb", columnDirection)}
+                >
+                  OREB
+                </th>
+                <th
+                  className={
+                    activeStat === "dreb"
+                      ? "uppercase bg-deepcyan text-cream border border-gray-300  lg:table-cell w-10 cursor-pointer"
+                      : "uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-10 cursor-pointer hover:bg-deepcyan hover:text-cream"
+                  }
+                  onClick={() => handleStatSort("dreb", columnDirection)}
+                >
+                  DREB
                 </th>
               </tr>
             </thead>
             <tbody>
               {playerList.map((player) => {
                 return (
-                  <tr className="border" key={player.uuid}>
+                  <tr
+                    className="border bg-gray-900 even:bg-dark"
+                    key={player.uuid}
+                  >
                     <td className="border min-h-12 min-w-4 break-all ">
                       {player.first_name} {player.last_name}
                     </td>
@@ -181,6 +346,24 @@ export default function PlayerTable() {
                       {" "}
                       {player.stats.data.length > 0
                         ? player.stats.data[0].turnover
+                        : "DNP"}
+                    </td>
+                    <td className="border min-h-12 min-w-4 break-all ">
+                      {" "}
+                      {player.stats.data.length > 0
+                        ? player.stats.data[0].reb
+                        : "DNP"}
+                    </td>
+                    <td className="border min-h-12 min-w-4 break-all ">
+                      {" "}
+                      {player.stats.data.length > 0
+                        ? player.stats.data[0].oreb
+                        : "DNP"}
+                    </td>
+                    <td className="border min-h-12 min-w-4 break-all ">
+                      {" "}
+                      {player.stats.data.length > 0
+                        ? player.stats.data[0].dreb
                         : "DNP"}
                     </td>
                   </tr>
