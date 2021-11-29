@@ -1,12 +1,12 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../state";
 import { teamInfo } from "../teamInfo/TeamInfo";
 import { axiosInstance } from "../../axiosInstance";
 
 export default function PlayerCard({ player }) {
-  const state = useSelector((state) => state);
+  // const state = useSelector((state) => state);
   const dispatch = useDispatch();
 
   const { removePlayerFromList, updatePlayerStatsBySeason } =

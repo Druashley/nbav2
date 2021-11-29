@@ -3,6 +3,7 @@ import PlayerSelector from "../player/PlayerSelector";
 import PlayerList from "../player/PlayerList";
 import PlayerTable from "../player/PlayerTable";
 import blob from "../../images/nba.svg";
+import BarChart from "../charts/BarChart";
 
 export default function HomePage() {
   return (
@@ -14,6 +15,8 @@ export default function HomePage() {
         <PlayerSelector />
         <PlayerList />
         <PlayerTable />
+        <BarChart />
+
         {/* <div>Stats showcase</div> */}
       </div>
     </section>
