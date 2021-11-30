@@ -1,33 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { Bar } from "react-chartjs-2";
 
 export default function BarChart() {
   const state = useSelector((state) => state.playerList);
 
-  const statOptions = [
-    { name: "Games Played", value: "games_played" },
-    { name: "Points", value: "pts" },
-    { name: "Field Goal Percentage", value: "fg_pct" },
-    { name: "Field Goals Attempts", value: "fga" },
-    { name: "Field Goals Made", value: "fgm" },
-    { name: "Three Pointer Percentage", value: "fg3_pct" },
-    { name: "Three Pointers Attempted", value: "fg3a" },
-    { name: "Three Pointers Mades", value: "fg3m" },
-    { name: "Free-Throw Percentage", value: "ft_pct" },
-    { name: "Free-Throws Attempted", value: "fta" },
-    { name: "Free-Throws Made", value: "ftm" },
-    { name: "Assists", value: "ast" },
-    { name: "Blocks", value: "blk" },
-    { name: "Steals", value: "stl" },
-    { name: "Personal Fouls", value: "pf" },
-    { name: "Turnovers", value: "turnover" },
-    { name: "Rebounds", value: "reb" },
-    { name: "Offensive Rebounds", value: "oreb" },
-    { name: "Defenseive Rebounds", value: "dreb" },
-  ];
+  const statOptions = useMemo(
+    () => [
+      { name: "Pick A Stat", value: 0, disabled: "disabled" },
+      { name: "Games Played", value: "games_played" },
+      { name: "Points", value: "pts" },
+      { name: "Field Goal Percentage", value: "fg_pct" },
+      { name: "Field Goals Attempts", value: "fga" },
+      { name: "Field Goals Made", value: "fgm" },
+      { name: "Three Pointer Percentage", value: "fg3_pct" },
+      { name: "Three Pointers Attempted", value: "fg3a" },
+      { name: "Three Pointers Mades", value: "fg3m" },
+      { name: "Free-Throw Percentage", value: "ft_pct" },
+      { name: "Free-Throws Attempted", value: "fta" },
+      { name: "Free-Throws Made", value: "ftm" },
+      { name: "Assists", value: "ast" },
+      { name: "Blocks", value: "blk" },
+      { name: "Steals", value: "stl" },
+      { name: "Personal Fouls", value: "pf" },
+      { name: "Turnovers", value: "turnover" },
+      { name: "Rebounds", value: "reb" },
+      { name: "Offensive Rebounds", value: "oreb" },
+      { name: "Defenseive Rebounds", value: "dreb" },
+    ],
+    []
+  );
+
   const [playerLabels, setPlayerLabels] = useState([]);
+  const [optionOne, setOptionOne] = useState("pts");
+  const [combinedDataSets, setCombinedDataSets] = useState([]);
   const [barData, setBarData] = useState({});
+  const [allStats, setAllStats] = useState([]);
 
   const [firstDataSet, setFirstDataSet] = useState({
     label: "",
@@ -53,107 +61,76 @@ export default function BarChart() {
 
   useEffect(() => {
     let playerLabelArry = [];
+    let playerStats = [];
+
     state.map((player) => {
       return playerLabelArry.push(
         `${player.season} ${player.first_name} ${player.last_name}`
       );
     });
+
+    state.map((player) => {
+      return playerStats.push({
+        ...player.stats.data[0],
+      });
+    });
     setPlayerLabels(playerLabelArry);
+    setAllStats(playerStats);
   }, [state]);
 
   useEffect(() => {
-    let newTableData = {
+    setCombinedDataSets([firstDataSet, secondDataSet, thirdDataSet]);
+  }, [firstDataSet, secondDataSet, thirdDataSet]);
+
+  useEffect(() => {
+    setBarData({
       labels: playerLabels,
-      datasets: [firstDataSet, secondDataSet, thirdDataSet],
-    };
-    setBarData(newTableData);
-  }, [playerLabels, firstDataSet, secondDataSet, thirdDataSet]);
+      datasets: combinedDataSets,
+    });
+  }, [playerLabels, combinedDataSets]);
+
+  const filteredStatsByOption = (option) => {
+    return state.map((player) => {
+      return player.stats.data[0][option];
+    });
+  };
+
+  const filteredStatNameByOption = (option) => {
+    let filteredStat = statOptions.filter((stat) => stat.value === option);
+    return filteredStat[0].name;
+  };
+
+  // useEffect(() => {
+  //   setFirstDataSet({
+  //     label: filteredStatNameByOption(optionOne),
+  //     data: filteredStatsByOption(optionOne),
+  //   });
+  // }, [optionOne]);
 
   const handleFirstDataSet = (e) => {
-    let filteredStat = statOptions.filter(
-      (stat) => stat.value === e.target.value
-    );
-    let labelName = filteredStat[0].name;
-    console.log(e.target.value);
-    let filteredData = state.map((player) => {
-      return player.stats.data[0][e.target.value];
-    });
+    setOptionOne(e.target.value);
     setFirstDataSet({
-      label: labelName,
-      data: filteredData,
-      backgroundColor: "rgb(0, 184, 169)",
-      borderColor: "rgb(0, 184, 169)",
-      borderWidth: 1,
+      ...firstDataSet,
+      label: filteredStatNameByOption(e.target.value),
+      data: filteredStatsByOption(e.target.value),
     });
   };
 
   const handleSecondDataSet = (e) => {
-    let filteredStat = statOptions.filter(
-      (stat) => stat.value === e.target.value
-    );
-    let labelName = filteredStat[0].name;
-    let filteredData = state.map((player) => {
-      return player.stats.data[0][e.target.value];
-    });
     setSecondDataSet({
-      label: labelName,
-      data: filteredData,
-      backgroundColor: "rgb(248, 243, 212)",
-      borderColor: "rgb(248, 243, 212)",
-      borderWidth: 1,
+      ...secondDataSet,
+      label: filteredStatNameByOption(e.target.value),
+      data: filteredStatsByOption(e.target.value),
     });
   };
 
   const handleThirdDataSet = (e) => {
-    let filteredStat = statOptions.filter(
-      (stat) => stat.value === e.target.value
-    );
-    let labelName = filteredStat[0].name;
-    let filteredData = state.map((player) => {
-      return player.stats.data[0][e.target.value];
-    });
     setThirdDataSet({
-      label: labelName,
-      data: filteredData,
-      backgroundColor: "rgb(246, 65, 108)",
-      borderColor: "rgb(246, 65, 108)",
-      borderWidth: 1,
+      ...thirdDataSet,
+      label: filteredStatNameByOption(e.target.value),
+      data: filteredStatsByOption(e.target.value),
     });
   };
-
-  //   const barData = {
-  //     labels: playerLabels,
-  //     datasets: [
-  //       {
-  //         label: "# of Votes",
-  //         data: [12, 19, 3, 5, 2, 3],
-  //         backgroundColor: [
-  //           "rgba(255, 99, 132, 0.2)",
-  //           "rgba(54, 162, 235, 0.2)",
-  //           "rgba(255, 206, 86, 0.2)",
-  //           "rgba(75, 192, 192, 0.2)",
-  //           "rgba(153, 102, 255, 0.2)",
-  //           "rgba(255, 159, 64, 0.2)",
-  //         ],
-  //         borderColor: [
-  //           "rgba(255, 99, 132, 1)",
-  //           "rgba(54, 162, 235, 1)",
-  //           "rgba(255, 206, 86, 1)",
-  //           "rgba(75, 192, 192, 1)",
-  //           "rgba(153, 102, 255, 1)",
-  //           "rgba(255, 159, 64, 1)",
-  //         ],
-  //         borderWidth: 1,
-  //       },
-  //       {
-  //         label: "Quantity",
-  //         data: [10, 14, 67, 57, 50, 32],
-  //         backgroundColor: "orange",
-  //         borderColor: "red",
-  //         borderWidth: 1,
-  //       },
-  //     ],
-  //   };
 
   const datasetKeyProvider = () => {
     return Math.random();
@@ -170,38 +147,53 @@ export default function BarChart() {
               id="statOne"
               className="bg-darkest border rounded mx-2"
               onChange={handleFirstDataSet}
+              defaultValue={0}
             >
               {statOptions.map((stat) => {
                 return (
-                  <option value={stat.value} key={stat.value}>
+                  <option
+                    disabled={stat.disabled}
+                    value={stat.value}
+                    key={stat.value}
+                  >
                     {stat.name}
                   </option>
                 );
               })}
             </select>
             <select
-              name="statOne"
-              id="statOne"
+              name="statTwo"
+              id="statTwo"
               className="bg-darkest border rounded mx-2"
               onChange={handleSecondDataSet}
+              defaultValue={0}
             >
               {statOptions.map((stat) => {
                 return (
-                  <option value={stat.value} key={stat.value}>
+                  <option
+                    disabled={stat.disabled}
+                    value={stat.value}
+                    key={stat.value}
+                  >
                     {stat.name}
                   </option>
                 );
               })}
             </select>
             <select
-              name="statOne"
-              id="statOne"
+              name="statThree"
+              id="statThree"
               className="bg-darkest border rounded mx-2"
               onChange={handleThirdDataSet}
+              defaultValue={0}
             >
               {statOptions.map((stat) => {
                 return (
-                  <option value={stat.value} key={stat.value}>
+                  <option
+                    disabled={stat.disabled}
+                    value={stat.value}
+                    key={stat.value}
+                  >
                     {stat.name}
                   </option>
                 );
@@ -213,7 +205,26 @@ export default function BarChart() {
             height={400}
             width={600}
             datasetKeyProvider={datasetKeyProvider}
-            options={{ scales: { yAxes: [{ ticks: { beginAtZero: true } }] } }}
+            options={{
+              scales: {
+                yAxes: [
+                  {
+                    ticks: { beginAtZero: true, fontColor: "#fcf1cf" },
+                    gridLines: {
+                      color: "#fcf1cf",
+                    },
+                  },
+                ],
+                xAxes: [
+                  {
+                    ticks: { fontColor: "white" },
+                    gridLines: {
+                      color: "#fcf1cf",
+                    },
+                  },
+                ],
+              },
+            }}
           />
         </div>
       )}
