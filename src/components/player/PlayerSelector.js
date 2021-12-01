@@ -88,15 +88,13 @@ export default function PlayerSelector() {
   };
 
   return (
-    <div className="flex flex-col">
-      {/* <button
-        onClick={() => {
-          console.log(state);
-        }}
-      >
-        See State
-      </button> */}
-      <div className="flex flex-wrap justify-center overflow-y-auto  md:h-auto  ">
+    <div>
+      {state.searchResult && state.searchResult.data && (
+        <div className="p-4 text-center text-2xl font-bold border-b-2 border-cream md:w-1/2 md:mx-auto">
+          Click or tap a player name to see their stats
+        </div>
+      )}
+      <div className="flex flex-wrap justify-center overflow-y-auto  md:h-auto mt-4">
         {state.searchResult &&
           state.searchResult.data &&
           state.searchResult.data.map((player) => {

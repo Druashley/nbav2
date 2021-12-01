@@ -32,7 +32,7 @@ export default function PlayerTable() {
                 <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell md:w-24 w-24">
                   Name
                 </th>
-                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-12">
+                <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-14 md:text-xs lg:text-base">
                   Season
                 </th>
                 <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell w-12">
