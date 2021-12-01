@@ -5,6 +5,7 @@ import { Bar } from "react-chartjs-2";
 export default function BarChart() {
   const state = useSelector((state) => state.playerList);
 
+  // This array is used to combine Human Readable Stats with the API required stat naming
   const statOptions = useMemo(
     () => [
       { name: "Pick A Stat", value: 0, disabled: "disabled" },
@@ -33,9 +34,10 @@ export default function BarChart() {
 
   const [playerLabels, setPlayerLabels] = useState([]);
   const [optionOne, setOptionOne] = useState("pts");
+  const [optionTwo, setOptionTwo] = useState(0);
+  const [optionThree, setOptionThree] = useState(0);
   const [combinedDataSets, setCombinedDataSets] = useState([]);
   const [barData, setBarData] = useState({});
-  const [allStats, setAllStats] = useState([]);
 
   const [firstDataSet, setFirstDataSet] = useState({
     label: "",
@@ -60,94 +62,141 @@ export default function BarChart() {
   });
 
   useEffect(() => {
+    // When the Redux state changes. We remap the players to a combine their season and name for the xAxes on the chart.
     let playerLabelArry = [];
-    let playerStats = [];
-
     state.map((player) => {
       return playerLabelArry.push(
         `${player.season} ${player.first_name} ${player.last_name}`
       );
     });
-
-    state.map((player) => {
-      return playerStats.push({
-        ...player.stats.data[0],
-      });
-    });
     setPlayerLabels(playerLabelArry);
-    setAllStats(playerStats);
   }, [state]);
 
   useEffect(() => {
+    // combines all datasets for the barchart in graph js
     setCombinedDataSets([firstDataSet, secondDataSet, thirdDataSet]);
   }, [firstDataSet, secondDataSet, thirdDataSet]);
 
   useEffect(() => {
+    // final combination of data to put the player labels and the arrays of data together.
     setBarData({
       labels: playerLabels,
       datasets: combinedDataSets,
     });
   }, [playerLabels, combinedDataSets]);
 
-  const filteredStatsByOption = (option) => {
-    return state.map((player) => {
-      return player.stats.data[0][option];
-    });
-  };
-
-  const filteredStatNameByOption = (option) => {
-    let filteredStat = statOptions.filter((stat) => stat.value === option);
-    return filteredStat[0].name;
-  };
-
-  // useEffect(() => {
-  //   setFirstDataSet({
-  //     label: filteredStatNameByOption(optionOne),
-  //     data: filteredStatsByOption(optionOne),
-  //   });
-  // }, [optionOne]);
-
-  const handleFirstDataSet = (e) => {
-    setOptionOne(e.target.value);
+  useEffect(() => {
+    // This grabs each stat by 'statName' Example - Gets all [pts] "Points" from playerListArray
+    const filteredStatsByOption = (option) => {
+      return state.map((player) => {
+        return player.stats.data[0][option];
+      });
+    };
+    // Sets the Human readable version from the value the API needs
+    const filteredStatNameByOption = (option) => {
+      let filteredStat = statOptions.filter((stat) => stat.value === option);
+      return filteredStat[0].name;
+    };
     setFirstDataSet({
-      ...firstDataSet,
-      label: filteredStatNameByOption(e.target.value),
-      data: filteredStatsByOption(e.target.value),
+      label: filteredStatNameByOption(optionOne),
+      data: filteredStatsByOption(optionOne),
+      backgroundColor: "rgb(0, 184, 169)",
+      borderColor: "rgb(0, 184, 169)",
+      borderWidth: 1,
     });
-  };
-
-  const handleSecondDataSet = (e) => {
+    if (optionTwo === 0) {
+      setSecondDataSet({
+        label: "",
+        data: [],
+        backgroundColor: "rgb(248, 243, 212)",
+        borderColor: "rgb(248, 243, 212)",
+        borderWidth: 1,
+      });
+    }
     setSecondDataSet({
-      ...secondDataSet,
-      label: filteredStatNameByOption(e.target.value),
-      data: filteredStatsByOption(e.target.value),
-    });
-  };
+      label: filteredStatNameByOption(optionTwo),
+      data: filteredStatsByOption(optionTwo),
 
-  const handleThirdDataSet = (e) => {
-    setThirdDataSet({
-      ...thirdDataSet,
-      label: filteredStatNameByOption(e.target.value),
-      data: filteredStatsByOption(e.target.value),
+      backgroundColor: "rgb(248, 243, 212)",
+      borderColor: "rgb(248, 243, 212)",
+      borderWidth: 1,
     });
+
+    if (optionThree === 0) {
+      setThirdDataSet({
+        label: "",
+        data: [],
+        backgroundColor: "rgb(246, 65, 108)",
+        borderColor: "rgb(246, 65, 108)",
+        borderWidth: 1,
+      });
+    }
+    setThirdDataSet({
+      label: filteredStatNameByOption(optionThree),
+      data: filteredStatsByOption(optionThree),
+      backgroundColor: "rgb(246, 65, 108)",
+      borderColor: "rgb(246, 65, 108)",
+      borderWidth: 1,
+    });
+  }, [optionOne, optionTwo, optionThree, state, statOptions]);
+
+  const handleOptionChange = (e, optionNumber) => {
+    // Sets the state of the option html element via event and the element's number
+    if (optionNumber === 1) {
+      setOptionOne(e.target.value);
+    }
+    if (optionNumber === 2) {
+      setOptionTwo(e.target.value);
+    }
+    if (optionNumber === 3) {
+      setOptionThree(e.target.value);
+    }
   };
 
   const datasetKeyProvider = () => {
     return Math.random();
   };
 
+  const barChartOptions = {
+    maintainAspectRatio: false,
+    legend: {
+      labels: {
+        fontColor: "white",
+      },
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: { beginAtZero: true, fontColor: "#fcf1cf" },
+          gridLines: {
+            color: "#fcf1cf",
+          },
+        },
+      ],
+      xAxes: [
+        {
+          ticks: { fontColor: "white", fontSize: 18 },
+          gridLines: {
+            color: "#fcf1cf",
+          },
+        },
+      ],
+    },
+  };
+
   return (
     <div>
       {state.length > 0 && (
         <div>
-          {" "}
-          <div>
+          <div className="flex flex-col md:flex-row justify-around mt-12 mb-4">
             <select
               name="statOne"
               id="statOne"
-              className="bg-darkest border rounded mx-2"
-              onChange={handleFirstDataSet}
-              defaultValue={0}
+              className="bg-darkest border rounded my-2 md:my-0 mx-2 p-1 py-4  md:p-4 cursor-pointer"
+              onChange={(e) => {
+                handleOptionChange(e, 1);
+              }}
+              defaultValue={"pts"}
             >
               {statOptions.map((stat) => {
                 return (
@@ -164,8 +213,10 @@ export default function BarChart() {
             <select
               name="statTwo"
               id="statTwo"
-              className="bg-darkest border rounded mx-2"
-              onChange={handleSecondDataSet}
+              className="bg-darkest border rounded my-2 md:my-0 mx-2 p-1 py-4  md:p-4 cursor-pointer"
+              onChange={(e) => {
+                handleOptionChange(e, 2);
+              }}
               defaultValue={0}
             >
               {statOptions.map((stat) => {
@@ -183,8 +234,10 @@ export default function BarChart() {
             <select
               name="statThree"
               id="statThree"
-              className="bg-darkest border rounded mx-2"
-              onChange={handleThirdDataSet}
+              className="bg-darkest border rounded my-2 md:my-0 mx-2 p-1 py-4  md:p-4 cursor-pointer"
+              onChange={(e) => {
+                handleOptionChange(e, 3);
+              }}
               defaultValue={0}
             >
               {statOptions.map((stat) => {
@@ -200,32 +253,15 @@ export default function BarChart() {
               })}
             </select>
           </div>
-          <Bar
-            data={barData}
-            height={400}
-            width={600}
-            datasetKeyProvider={datasetKeyProvider}
-            options={{
-              scales: {
-                yAxes: [
-                  {
-                    ticks: { beginAtZero: true, fontColor: "#fcf1cf" },
-                    gridLines: {
-                      color: "#fcf1cf",
-                    },
-                  },
-                ],
-                xAxes: [
-                  {
-                    ticks: { fontColor: "white" },
-                    gridLines: {
-                      color: "#fcf1cf",
-                    },
-                  },
-                ],
-              },
-            }}
-          />
+          <div className="pb-12">
+            <Bar
+              data={barData}
+              height={600}
+              width={400}
+              datasetKeyProvider={datasetKeyProvider}
+              options={barChartOptions}
+            />
+          </div>
         </div>
       )}
     </div>
