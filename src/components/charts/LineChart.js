@@ -19,10 +19,6 @@ export default function LineChart() {
   useEffect(() => {
     let allPlayerDataSets = [];
     let shootingChartDataSets = [];
-    // let playerStatsArray = [];
-    // state.map((player) => {
-    //   return playerStatsArray.push(player.stats.data[0]);
-    // });
     state.forEach((player) => {
       const randomColor = () => {
         let o = Math.round;
