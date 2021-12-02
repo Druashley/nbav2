@@ -65,8 +65,9 @@ export default function BarChart() {
     // When the Redux state changes. We remap the players to a combine their season and name for the xAxes on the chart.
     let playerLabelArry = [];
     state.map((player) => {
+      let firstInitital = player.first_name.slice(0, 1);
       return playerLabelArry.push(
-        `${player.season} ${player.first_name} ${player.last_name}`
+        `${player.season} ${firstInitital} ${player.last_name}`
       );
     });
     setPlayerLabels(playerLabelArry);
@@ -157,11 +158,20 @@ export default function BarChart() {
     return Math.random();
   };
 
+  const fontSizeByWindowSize = () => {
+    const { innerWidth: width } = window;
+    if (width > 1000) {
+      return 18;
+    } else {
+      return 8;
+    }
+  };
+  fontSizeByWindowSize();
   const barChartOptions = {
     maintainAspectRatio: false,
     legend: {
       labels: {
-        fontColor: "white",
+        fontColor: "#fcf1cf",
       },
     },
     scales: {
@@ -175,7 +185,7 @@ export default function BarChart() {
       ],
       xAxes: [
         {
-          ticks: { fontColor: "white", fontSize: 18 },
+          ticks: { fontColor: "white", fontSize: fontSizeByWindowSize() },
           gridLines: {
             color: "#fcf1cf",
           },

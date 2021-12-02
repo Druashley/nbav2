@@ -10,9 +10,9 @@ export default function PlayerList() {
         <div className="flex flex-col justify-center items-center pb-4">
           <div className="flex items-center justify-around">
             <div className="text-2xl uppercase">Player List</div>
-            <div className="mx-4 py-1 px-2 text-2xl border rounded-full hover:bg-cream hover:text-darkest cursor-pointer">
+            {/* <div className="mx-4 py-1 px-2 text-2xl border rounded-full hover:bg-cream hover:text-darkest cursor-pointer">
               ?
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-wrap justify-center items-stretch">

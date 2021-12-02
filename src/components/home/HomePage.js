@@ -4,6 +4,7 @@ import PlayerList from "../player/PlayerList";
 import PlayerTable from "../player/PlayerTable";
 import blob from "../../images/nba.svg";
 import BarChart from "../charts/BarChart";
+import LineChart from "../charts/LineChart";
 
 export default function HomePage() {
   return (
@@ -16,6 +17,7 @@ export default function HomePage() {
         <PlayerList />
         <PlayerTable />
         <BarChart />
+        <LineChart />
 
         {/* <div>Stats showcase</div> */}
       </div>
