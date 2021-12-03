@@ -3,10 +3,13 @@ import { axiosInstance } from "../../axiosInstance";
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../../state/index";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchBar() {
   // Sets state to all possible options.
   const state = useSelector((state) => state);
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
   // returns all methods, so we destructure instead.
@@ -23,6 +26,10 @@ export default function SearchBar() {
       .get(`players?search=${state.search}&per_page=10`)
       .then((res) => {
         setSearchResults(res.data);
+        // if statement to redirect to home page if someone is not on the homepage
+        if (window.location.hash !== "#/") {
+          navigate("/");
+        }
       });
   };
 

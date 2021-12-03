@@ -73,7 +73,7 @@ export default function LineChart() {
 
     legend: {
       labels: {
-        fontColor: "white",
+        fontColor: "#fcf1cf",
       },
     },
     scales: {
@@ -87,7 +87,7 @@ export default function LineChart() {
       ],
       xAxes: [
         {
-          ticks: { fontColor: "white", fontSize: 18 },
+          ticks: { fontColor: "#fcf1cf", fontSize: 18 },
           gridLines: {
             color: "#fcf1cf",
           },
@@ -100,7 +100,9 @@ export default function LineChart() {
     <div>
       {state.length > 0 && (
         <div className=" flex-col">
-          <h1>Line Chart</h1>
+          <div className="text-3xl uppercase text-cream pb-4 text-center">
+            Scoring Stats
+          </div>
           <div>
             <Line
               height={600}
@@ -109,6 +111,21 @@ export default function LineChart() {
               options={lineChartOptions}
             />
           </div>
+          <div className="text-gray-500 text-sm p-2">
+            <ul>
+              <li className="pb-2">
+                * Stats will appear as 0 if the player did not compete in the
+                season
+              </li>
+              <li className="pb-2">
+                Click or tap the stat name at the top of the chart to remove it
+                from being displayed
+              </li>
+            </ul>
+          </div>
+          <div className="text-3xl uppercase text-cream py-4 text-center">
+            Other Stats
+          </div>
           <div>
             <Line
               height={600}
@@ -116,6 +133,18 @@ export default function LineChart() {
               data={lineChartData}
               options={lineChartOptions}
             />
+          </div>
+          <div className="text-gray-400 text-sm p-2">
+            <ul>
+              <li className="pb-2">
+                * Stats will appear as 0 if the player did not compete in the
+                season
+              </li>
+              <li className="pb-2">
+                Click or tap the stat name at the top of the chart to remove it
+                from being displayed
+              </li>
+            </ul>
           </div>
         </div>
       )}

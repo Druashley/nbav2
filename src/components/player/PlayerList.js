@@ -21,8 +21,8 @@ export default function PlayerList() {
                 return <PlayerCard player={player} key={player.uuid} />;
               })}
           </div>
-          <div className="flex justify-end place-items-end text-right w-full">
-            <div className="text-gray-500 text-sm p-2">
+          <div className="flex justify-center place-items-end text-left w-full ">
+            <div className="text-gray-500 text-sm p-4">
               <ul>
                 <li className="pb-2">
                   You can add the same player multiple times and compare

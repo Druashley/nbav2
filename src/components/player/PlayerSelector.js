@@ -89,6 +89,11 @@ export default function PlayerSelector() {
 
   return (
     <div>
+      {/* {state.searchResult.length === 0 && (
+        <div className="text-center">
+          Search and add NBA players to begin comparing
+        </div>
+      )} */}
       {state.searchResult && state.searchResult.data && (
         <div className="p-4 text-center text-2xl font-bold border-b-2 border-cream md:w-1/2 md:mx-auto">
           Click or tap a player name to see their stats
@@ -189,7 +194,7 @@ export default function PlayerSelector() {
               handleClear();
             }}
           >
-            Clear
+            Clear Search
           </div>
         </div>
       )}

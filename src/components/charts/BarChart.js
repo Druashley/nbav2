@@ -90,6 +90,14 @@ export default function BarChart() {
     // This grabs each stat by 'statName' Example - Gets all [pts] "Points" from playerListArray
     const filteredStatsByOption = (option) => {
       return state.map((player) => {
+        if (
+          option === "fg_pct" ||
+          option === "ft_pct" ||
+          option === "fg3_pct"
+        ) {
+          return Math.floor(player.stats.data[0][option] * 100);
+        }
+
         return player.stats.data[0][option];
       });
     };
@@ -198,7 +206,12 @@ export default function BarChart() {
     <div>
       {state.length > 0 && (
         <div>
-          <div className="flex flex-col md:flex-row justify-around mt-12 mb-4">
+          <div className="pt-12 pb-4">
+            <div className="text-3xl uppercase text-cream text-center">
+              Choose and compare different stats
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row justify-around mb-4">
             <select
               name="statOne"
               id="statOne"
@@ -263,7 +276,8 @@ export default function BarChart() {
               })}
             </select>
           </div>
-          <div className="pb-12">
+
+          <div>
             <Bar
               data={barData}
               height={600}
@@ -271,6 +285,18 @@ export default function BarChart() {
               datasetKeyProvider={datasetKeyProvider}
               options={barChartOptions}
             />
+          </div>
+          <div className="text-gray-500 text-sm p-2">
+            <ul>
+              <li className="pb-2">
+                * Stats will appear as 0 if the player did not compete in the
+                season
+              </li>
+              <li className="pb-2">
+                Click or tap the stat name at the top of the chart to remove it
+                from being displayed
+              </li>
+            </ul>
           </div>
         </div>
       )}

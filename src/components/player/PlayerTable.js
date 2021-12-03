@@ -26,7 +26,12 @@ export default function PlayerTable() {
     <>
       {playerList.length > 0 && (
         <div className="overflow-auto text-xs md:text-base text-center">
-          <table className="border-collapse w-full table-fixed break-word mt-12 overflow-auto">
+          <div className="py-2">
+            <div className="text-3xl uppercase text-cream text-center">
+              Season Averages
+            </div>
+          </div>
+          <table className=" border-collapse w-full table-fixed break-word">
             <thead>
               <tr className="h-12">
                 <th className="uppercase bg-gray-200 text-gray-600 border border-gray-300  lg:table-cell md:w-24 w-24">
@@ -371,6 +376,16 @@ export default function PlayerTable() {
               })}
             </tbody>
           </table>
+          <div className="flex justify-start place-items-start text-left w-full">
+            <div className="text-gray-500 text-sm p-2">
+              <ul>
+                <li className="pb-2">
+                  * Stats will appear as 0 if the player did not compete in the
+                  season
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       )}
     </>
