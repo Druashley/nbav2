@@ -2,7 +2,7 @@ import React from "react";
 
 export default function CreatorInfo() {
   return (
-    <div className="md:border md:rounded-xl md:w-2/3 p-4 md:p-12 bg-dark bg-opacity-20 mx-auto mt-36 text-xl">
+    <div className="md:border md:rounded-xl md:w-2/3 p-4 md:p-12 bg-dark bg-opacity-20 mx-auto mt-12 text-xl">
       <div className="pb-4">
         This website was made by{" "}
         <a

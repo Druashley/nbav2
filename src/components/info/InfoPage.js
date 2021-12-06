@@ -1,5 +1,6 @@
 import React from "react";
 
+import HowToVideo from "./HowToVideo";
 import infoBackgroundTwo from "../../images/info-background-2.svg";
 import CreatorInfo from "./CreatorInfo";
 
@@ -9,10 +10,8 @@ export default function InfoPage() {
       className="min-h-screen bg-cover text-cream"
       style={{ backgroundImage: `url(${infoBackgroundTwo})` }}
     >
-      <div className="flex flex-col container mx-auto">
-        {/* <div>
-          <div>How to use video</div>
-        </div> */}
+      <div className="flex flex-col container mx-auto items-center">
+        <HowToVideo />
         <CreatorInfo />
       </div>
     </div>

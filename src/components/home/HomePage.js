@@ -7,6 +7,7 @@ import blob from "../../images/nba.svg";
 import BarChart from "../charts/BarChart";
 import LineChart from "../charts/LineChart";
 import CreatorInfo from "../info/CreatorInfo";
+import HowToVideo from "../info/HowToVideo";
 
 export default function HomePage() {
   const state = useSelector((state) => state);
@@ -16,10 +17,13 @@ export default function HomePage() {
       style={{ backgroundImage: `url(${blob})` }}
     >
       {state.searchResult.length === 0 && state.playerList.length === 0 && (
-        <div className="container mx-auto pt-12 text-cream text-2xl">
+        <div className="container mx-auto pt-12 text-cream text-2xl flex flex-col items-center justify-center">
           <div className="text-center">
             Search and add NBA players to begin comparing season averages
           </div>
+
+          <HowToVideo />
+
           <CreatorInfo />
         </div>
       )}
